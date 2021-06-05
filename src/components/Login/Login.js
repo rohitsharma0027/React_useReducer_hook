@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
@@ -27,6 +27,22 @@ const Login = (props) => {
   // Step 1: Using the use reducer hook
   const [emailState,dispatchEmail] = useReducer(emailReducer,{value:'', isValid: null})
   const [passwordState,dispatchPassword] = useReducer(passwordReducer,{value:'', isValid: null})
+
+  const {isValid: emailIsValid } = emailState;
+  const {isValid : passwordIsValid } = passwordState;
+
+  useEffect(()=>{  
+    const identifier = setTimeout(()=>{
+      console.log('Check form Validity')
+      setFormIsValid(emailIsValid,passwordIsValid);
+    },500)
+
+    return ()=>{
+      console.log("Clean Up")
+      clearTimeout(identifier);
+    }
+
+  },[emailIsValid,passwordIsValid])
 
   const emailChangeHandler = (event) => {
     dispatchEmail({type:'USER_INPUT',
